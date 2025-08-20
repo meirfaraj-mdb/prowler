@@ -15,8 +15,11 @@ class Project(BaseModel):
     org_id: str
     created: str
     cluster_count: int
+    network_isolation_count: int
     network_access_entries: List[MongoDBAtlasNetworkAccessEntry] = []
     project_settings: Optional[dict] = {}
+    audit_config: Optional[dict]
+    database_users_config: Optional[dict]
 
 
 class Projects(MongoDBAtlasService):
@@ -84,6 +87,15 @@ class Projects(MongoDBAtlasService):
         # Get project settings
         project_settings = self._get_project_settings(project_id)
 
+        # Get Auditing configuration
+        audit_config = self._get_audit_config(project_id)
+
+        # Get Network isolation (Peering + Private Endpoint) configuration count
+        network_isolation_count = self._get_network_isolation_count(project_id)
+
+        # Get database users configuration :
+        database_users_config = self._get_database_users_config(project_id)
+
         return Project(
             id=project_id,
             name=project_data.get("name", ""),
@@ -92,7 +104,107 @@ class Projects(MongoDBAtlasService):
             cluster_count=cluster_count,
             network_access_entries=network_access_entries,
             project_settings=project_settings,
+            audit_config=audit_config,
+            network_isolation_count=network_isolation_count,
+            database_users_config=database_users_config,
         )
+
+    def _get_audit_config(self, project_id: str) -> dict:
+        """
+        Get if audit configuration
+
+        Args:
+            project_id: Project ID
+
+        Returns:
+            dict: get Auditing project configuration
+        """
+        try:
+            audit_log = self._make_request("GET", f"/groups/{project_id}/auditLog")
+            return audit_log
+        except Exception as error:
+            logger.error(
+                f"Error getting audit configuration for project {project_id}: {error}"
+            )
+            return {}
+
+    def _get_network_isolation_count(self, project_id: str) -> int:
+        """
+        Get count of network peering containers + private endpoint in the specified project.
+
+        Args:
+            project_id: Project ID
+
+        Returns:
+            int: Number of  network peering containers + private endpoint in the specified project.
+        """
+        network_peering_count = self._get_network_peering_count(project_id)
+        cloud_providers = ["AWS", "AZURE", "GCP"]
+        network_private_endpoint_count = 0
+        for cloud_provider in cloud_providers:
+            network_private_endpoint_count += self._get_private_endpoint_count(project_id,cloud_provider)
+        return network_peering_count + network_private_endpoint_count
+
+    def _get_network_peering_count(self, project_id: str) -> int:
+        """
+        Get  count of network peering containers in the specified project.
+
+        Args:
+            project_id: Project ID
+
+        Returns:
+            int: Number of  all network peering containers in the specified project.
+        """
+        try:
+            network_peering = self._paginate_request(f"/groups/{project_id}/containers/all")
+            return len(network_peering)
+        except Exception as error:
+            logger.error(
+                f"Error getting network peering count for project {project_id}: {error}"
+            )
+            return 0
+
+    def _get_private_endpoint_count(self, project_id: str,cloud_provider : str) -> int:
+        """
+        Get all network private endpoint in the specified project for a cloud_provider.
+
+        Args:
+            project_id: Project ID
+            cloud_provider: the cloud provider
+
+        Returns:
+            int: Number of all network private endpoint in the specified project for a specified cloud provider.
+        """
+        try:
+            private_endpoints = self._make_request("GET",f"/groups/{project_id}/privateEndpoint/{cloud_provider}/endpointService")
+            return len(private_endpoints)
+        except Exception as error:
+            logger.error(
+                f"Error getting private endpoint count for project {project_id}: {error}"
+            )
+            return 0
+
+
+    def _get_database_users_config (self, project_id: str) -> dict:
+        """
+        Get database users configuration in the specified project.
+
+        Args:
+            project_id: Project ID
+
+        Returns:
+            dict: database users configuration in the specified project.
+        """
+        try:
+            database_users_configuration  = self._make_request("GET",f"/groups/{project_id}/databaseUsers ")
+            return database_users_configuration
+        except Exception as error:
+            logger.error(
+                f"Error getting database users configuration for project {project_id}: {error}"
+            )
+            return {}
+
+
 
     def _get_cluster_count(self, project_id: str) -> int:
         """

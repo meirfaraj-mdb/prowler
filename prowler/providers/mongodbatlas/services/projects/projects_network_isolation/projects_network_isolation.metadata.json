@@ -1,0 +1,32 @@
+{
+  "Provider": "mongodbatlas",
+  "CheckID": "projects_network_isolation",
+  "CheckTitle": "Ensure MongoDB Atlas project network peering or private link are configured.",
+  "CheckType": [],
+  "ServiceName": "projects",
+  "SubServiceName": "",
+  "ResourceIdTemplate": "mongodbatlas:project-id:project-name",
+  "Severity": "high",
+  "ResourceType": "MongoDBAtlasProject",
+  "Description": "Ensure MongoDB Atlas project network peering or PrivateLink are configured to enhance security. Using the cloud provider's Virtual Private Cloud (VPC) or Virtual Network (VNet) features, you can isolate your database networks from the open Internet and other cloud networks—if supported by your provider. Network Peering enables secure, one-way connections between virtual networks, while AWS PrivateLink allows you to connect via a private network rather than exposing services publicly. Properly configuring these options helps protect sensitive data and lowers risk by limiting exposure to external threats.",
+  "Risk": "If network peering or PrivateLink is not configured for MongoDB Atlas projects, the database may be exposed to the open Internet or other untrusted networks. This increases the risk of unauthorized access, data breaches, and interception of sensitive information. Without proper network isolation, attackers could exploit public endpoints or misconfigurations to compromise the environment, leading to potential security incidents and non-compliance with regulatory requirements.",
+  "RelatedUrl": "https://www.mongodb.com/docs/atlas/security-vpc-peering/",
+  "Remediation": {
+    "Code": {
+      "CLI": "",
+      "NativeIaC": "",
+      "Other": "",
+      "Terraform": ""
+    },
+    "Recommendation": {
+      "Text": "Configure Network peering or Private endpoint to isolate your database.",
+      "Url": "https://www.mongodb.com/docs/atlas/security-configure-private-endpoints/"
+    }
+  },
+  "Categories": [
+    "network-security"
+  ],
+  "DependsOn": [],
+  "RelatedTo": [],
+  "Notes": "This check verifies that MongoDB Atlas projects have configured network Peering or PrivateLink."
+}

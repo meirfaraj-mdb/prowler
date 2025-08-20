@@ -1,0 +1,31 @@
+{
+  "Provider": "mongodbatlas",
+  "CheckID": "projects_audit_log_enabled",
+  "CheckTitle": "Ensure MongoDB Atlas project have Audit Log enabled",
+  "CheckType": [],
+  "ServiceName": "projects",
+  "SubServiceName": "",
+  "ResourceIdTemplate": "mongodbatlas:project-id:project-name",
+  "Severity": "high",
+  "ResourceType": "MongoDBAtlasProject",
+  "Description": "Ensure that MongoDB Atlas projects have properly configured Auditing .",
+  "Risk": "Failure to enable auditing in MongoDB Enterprise and Atlas significantly increases the risk of undetected unauthorized activity and non-compliance with security and regulatory requirements. Without granular auditing, organizations lack an electronic paper trail to monitor and investigate changes to data and database configurations. This absence limits the ability to support incident response, detect potential breaches or inappropriate actions, and demonstrate compliance during audits. Additionally, the inability to integrate audit logs with third-party analysis tools such as Splunk further diminishes visibility and response capabilities in the event of security incidents.",
+  "RelatedUrl": "https://www.mongodb.com/docs/atlas/database-auditing",
+  "Remediation": {
+    "Code": {
+      "CLI": "",
+      "NativeIaC": "",
+      "Other": "",
+      "Terraform": ""
+    },
+    "Recommendation": {
+      "Text": "Configure auditing based on your application's requirements.",
+      "Url": "https://www.mongodb.com/docs/atlas/database-auditing"
+    }
+  },
+  "Categories": [],
+  "DependsOn": [],
+  "RelatedTo": [],
+  "Notes": "This check verifies whether auditing is enabled in MongoDB Atlas deployments. Auditing provides a detailed log of all changes to data or selected database configurations, generating an electronic paper trail essential for monitoring, incident response, and compliance. With configurable logging levels and integration options for third-party analysis tools, enabling auditing helps organizations detect unauthorized activities and meet regulatory requirements."
+
+}

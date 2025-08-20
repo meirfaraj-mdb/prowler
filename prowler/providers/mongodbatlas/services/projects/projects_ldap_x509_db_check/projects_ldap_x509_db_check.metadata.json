@@ -1,0 +1,31 @@
+{
+  "Provider": "mongodbatlas",
+  "CheckID": "projects_ldap_x509_check",
+  "CheckTitle": "Ensure MongoDB Atlas project ldap (and optionally X509) is configured.",
+  "CheckType": [],
+  "ServiceName": "projects",
+  "SubServiceName": "",
+  "ResourceIdTemplate": "mongodbatlas:project-id:project-name",
+  "Severity": "high",
+  "ResourceType": "MongoDBAtlasProject",
+  "Description": "Ensure that the MongoDB Atlas project is configured to use LDAP authentication, and optionally, X.509 certificates. This enhances access control and provides stronger authentication mechanisms for database users.",
+  "Risk": "If LDAP (and optionally X.509) authentication is not configured for MongoDB Atlas projects, the environment may rely on weaker or less centralized authentication methods, such as MongoDB SCRAM. This increases the risk of unauthorized access, inconsistent user management, and potential security breaches. Without robust integration with enterprise identity solutions, organizations may face challenges in enforcing access policies, auditing user activity, and maintaining compliance with regulatory requirements. Additionally, LDAP is deprecated from MongoDB version 8 in favor of Workforce Identity Federation, so organizations should plan for migration to ensure continued support and enhanced security.",
+  "RelatedUrl": "https://www.mongodb.com/docs/atlas/security-ldaps/",
+  "Remediation": {
+    "Code": {
+      "CLI": "",
+      "NativeIaC": "",
+      "Other": "",
+      "Terraform": ""
+    },
+    "Recommendation": {
+      "Text": "Configure LDAP.Note : Configure Workforce Identity Federation for MongoDB Atlas projects to ensure strong, centralized authentication and seamless integration with enterprise identity providers. If LDAP or X.509 authentication is currently in use, begin planning for migration, as LDAP is deprecated from MongoDB version 8 onward. Workforce Identity Federation enhances security, simplifies user management, and helps organizations meet compliance requirements. Regularly review authentication settings to align with best practices and to support ongoing operational and regulatory needs.",
+      "Url": "https://www.mongodb.com/docs/atlas/security-ldaps/"
+    }
+  },
+  "Categories": [
+  ],
+  "DependsOn": [],
+  "RelatedTo": [],
+  "Notes": "This check verifies whether MongoDB Atlas projects are configured with LDAP or X.509 authentication, but organizations should be aware that LDAP is deprecated from MongoDB version 8 onward. It is recommended to transition to Workforce Identity Federation to maintain support and leverage enhanced authentication features."
+}
